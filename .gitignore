@@ -1,0 +1,79 @@
+# macOS
+.DS_Store
+__MACOSX/
+
+# Environment - never commit secrets
+.env
+.env.*
+!.env.example
+
+# IDE
+.claude/
+.codex/
+**/.claude/
+**/.codex/
+settings.local.json
+.idea/
+.vscode/
+*.iml
+
+# Build artifacts
+**/node_modules/
+**/target/
+**/dist/
+target/
+build/
+backend-java/target/
+frontend/node_modules/
+frontend/dist/
+node_modules/
+dist/
+*.class
+
+# Logs
+*.log
+logs/
+
+# Local file storage and temporary files
+uploads/
+local-storage/
+/storage/
+tmp/
+temp/
+dev-uploads/
+.runtime/
+
+# Python caches, virtual environments and test reports
+**/.pytest_cache/
+**/__pycache__/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Test and packaging output
+delivery_output/
+surefire-reports/
+failsafe-reports/
+test-results/
+coverage/
+*.tar
+*.tar.gz
+*.zip
+
+# Maven Wrapper binary (commit the scripts, not the downloaded binary)
+backend-java/.mvn/wrapper/maven-wrapper.jar
+
+# macOS Finder custom folder icon
+Icon\r
+Icon?
+
+# Секреты production
+.env.production
+# Шаблон без значений нужен в репозитории
+!.env.production.example

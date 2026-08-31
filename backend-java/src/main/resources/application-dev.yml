@@ -1,0 +1,32 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+app:
+  cors:
+    allowed-origins: http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000
+
+  jwt:
+    secret: ${APP_JWT_SECRET:ZGV2LXNlY3JldC1rZXktZm9yLWxvY2FsLWRldi1vbmx5LW5vdC1mb3ItcHJvZHVjdGlvbg==}
+    access-ttl-seconds: 86400
+  otp:
+    resend-cooldown-seconds: 5
+    max-attempts: 10
+  sms:
+    provider: ${APP_SMS_PROVIDER:local-file}
+    local-file:
+      directory: ${APP_LOCAL_SMS_DIRECTORY:.runtime/dev-sms}
+  storage:
+    provider: local
+    local:
+      path: ${APP_STORAGE_LOCAL_PATH:./dev-uploads}
+  document:
+    max-size-bytes: 10485760
+  documents:
+    required-types: []
+
+management:
+  health:
+    mail:
+      enabled: false
