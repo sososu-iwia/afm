@@ -71,6 +71,19 @@ public class AuthController {
         );
     }
 
+    @PostMapping("/demo-login")
+    @Operation(summary = "Временный демонстрационный вход без OTP")
+    public AuthResponse demoLogin(
+            @Valid @RequestBody LoginRequest request,
+            HttpServletRequest httpRequest
+    ) {
+        return authService.demoLogin(
+                request.phone(),
+                httpRequest.getHeader("User-Agent"),
+                clientIp(httpRequest)
+        );
+    }
+
     @PostMapping("/refresh")
     @Operation(summary = "Обновить JWT-сессию")
     public AuthResponse refresh(@Valid @RequestBody RefreshRequest request, HttpServletRequest httpRequest) {

@@ -150,6 +150,46 @@ public class AuthService {
     }
 
     @Transactional
+    public AuthResponse demoLogin(
+            String rawPhone,
+            String userAgent,
+            String remoteAddress
+    ) {
+        String phone = phoneNormalizer.normalize(rawPhone);
+
+        User user = userRepository.findByPhone(phone).orElse(null);
+
+        if (user == null) {
+            user = new User();
+            user.setPhone(phone);
+            user.setFullName("Демо пользователь");
+            user.setRole(UserRole.APPLICANT);
+            user.setAccountStatus(UserAccountStatus.ACTIVE);
+            user.setVerifiedAt(Instant.now());
+            user = userRepository.save(user);
+        } else {
+            user.setAccountStatus(UserAccountStatus.ACTIVE);
+
+            if (!user.isVerified()) {
+                user.setVerifiedAt(Instant.now());
+            }
+
+            user = userRepository.save(user);
+        }
+
+        AuthResponse response =
+                issueTokens(user, UUID.randomUUID(), userAgent, remoteAddress);
+
+        auditAuth(
+                "DEMO_LOGIN",
+                user,
+                Map.of("userId", user.getId())
+        );
+
+        return response;
+    }
+
+    @Transactional
     public AuthResponse refresh(String rawRefreshToken, String userAgent, String remoteAddress) {
         String hash = sha256Hex(rawRefreshToken);
         RefreshToken stored = refreshTokenRepository.findByTokenHash(hash)

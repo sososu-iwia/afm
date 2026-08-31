@@ -22,6 +22,9 @@ export const authApi = {
   login: (phone: string) =>
     apiClient.post('/auth/login', { phone }),
 
+  demoLogin: (phone: string) =>
+    apiClient.post<AuthResponse>('/auth/demo-login', { phone }),
+
   verifyLogin: (phone: string, code: string) =>
     apiClient.post<AuthResponse>('/auth/verify', { phone, code, purpose: 'LOGIN' }),
 

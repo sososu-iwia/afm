@@ -97,27 +97,52 @@ export default function LoginPage() {
 
   const handleSendOTP = async () => {
     const digits = phone.replace(/\D/g, '')
-    if (!digits) { setError(t('login.errors.phoneRequired')); return }
-    if (digits.length !== 10) { setError(t('login.errors.phoneFormat')); return }
-    if (mode === 'register' && !name.trim()) { setError(t('login.errors.nameRequired')); return }
+
+    if (!digits) {
+      setError(t('login.errors.phoneRequired'))
+      return
+    }
+
+    if (digits.length !== 10) {
+      setError(t('login.errors.phoneFormat'))
+      return
+    }
+
+    if (mode === 'register' && !name.trim()) {
+      setError(t('login.errors.nameRequired'))
+      return
+    }
 
     setLoading(true)
     setError('')
-    setDevOtp('')
+
     try {
-      if (mode === 'login') {
-        await authApi.login(fullPhone)
-      } else {
-        await authApi.register(fullPhone, name.trim())
-      }
-      if (import.meta.env.DEV) {
-        const r = await authApi.devOtp(fullPhone).catch(() => null)
-        if (r) setDevOtp(r.data.code)
-      }
-      // Шаг с кодом: во входе он второй, в регистрации — третий.
-      goTo(mode === 'login' ? 1 : 2)
+      const res = await authApi.demoLogin(fullPhone)
+
+      const { accessToken, refreshToken, user } = res.data
+      const normalizedRole = normalizeUserRole(user.role)
+
+      setSession(
+        user.phone,
+        normalizedRole,
+        accessToken,
+        refreshToken
+      )
+
+      navigate(
+        normalizedRole === 'applicant'
+          ? '/applicant'
+          : normalizedRole === 'manager'
+            ? '/profile'
+            : '/commission'
+      )
     } catch (error) {
-      setError(describeError(error, t('login.errors.sendFailed')))
+      setError(
+        describeError(
+          error,
+          'Не удалось выполнить демонстрационный вход'
+        )
+      )
     } finally {
       setLoading(false)
     }
